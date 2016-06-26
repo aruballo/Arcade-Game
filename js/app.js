@@ -33,6 +33,7 @@ var Player = function(x, y, speed){
     this.y = y;
     this.sprite = 'images/char-horn-girl.png';
     this.speed = speed;
+    this.score = 0;
 }
 
 Player.prototype.render = function() {
@@ -71,16 +72,29 @@ Player.prototype.handleInput = function(key){
         this.x = newX;
     }
 
-    if (newY < -50 || newY > 405){
+    if (newY < 0){
+        this.scored();
+    }
+    else if (newY > 405){
         this.y = originalY;
     }
     else{
         this.y = newY;
     }
+}
 
+Player.prototype.scored = function(){
+    this.score = this.score + 10;
+    this.reset();
 }
 
 Player.prototype.update = function(){
+}
+
+Player.prototype.reset = function(){
+    this.x = 205;
+    this.y = 375;
+    this.speed = 1;
 }
 
 // Now instantiate your objects.
