@@ -39,31 +39,48 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// However, players also have to process input, so add that
-// as well
+// Process player input
 Player.prototype.handleInput = function(key){
+    var originalX = this.x;
+    var originalY = this.y;
+    var newX = 0;
+    var newY = 0;
+
     if (key == 'left'){
-        this.x = this.x - 100;
+        newX = this.x - 101;
+        newY = originalY;
     }
     else if (key == "right"){
-        this.x = this.x + 100;
+        newX = this.x + 101;
+        newY = originalY;
+
     }
     else if (key == "up"){
-        this.y = this.y - 85;
+        newY = this.y - 83;
+        newX = originalX;
     }
     else if (key == "down"){
-        this.y = this.y + 85;
+        newY = this.y + 83;
+        newX = originalX;
     }
-}
 
-Player.prototype.update = function(deltaX, deltaY){
-    if (deltaX && deltaY){
-        this.x = this.x + deltaX * speed;
-        this.y = this.y + deltaY * speed;
+    if (newX < 0 || newX > 498){
+        this.x = originalX;
     }
     else{
-        //nada
+        this.x = newX;
     }
+
+    if (newY < -50 || newY > 405){
+        this.y = originalY;
+    }
+    else{
+        this.y = newY;
+    }
+
+}
+
+Player.prototype.update = function(){
 }
 
 // Now instantiate your objects.
