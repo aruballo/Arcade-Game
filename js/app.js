@@ -83,8 +83,17 @@ Player.prototype.handleInput = function(key){
     }
 }
 
+Player.prototype.updateScore = function(score){
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0,150,100);
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "blue";
+    ctx.fillText("Score: " + score,10,50);
+}
+
 Player.prototype.scored = function(){
     this.score = this.score + 10;
+    this.updateScore(this.score);
     this.reset();
 }
 
@@ -116,6 +125,7 @@ images[1] = "images/enemy-bug.png";
 images[0] = "images/char-horn-girl.png";
 
 Resources.load(images);
+
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
