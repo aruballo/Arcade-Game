@@ -17,7 +17,40 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x = this.x + this.speed * dt;
+
+    // Calculate initial movement
+    var delta = this.x + this.speed * dt;
+
+    // If this enemy goes offscreen, reset his position
+    // and give him a new speed. Otherwise continue forward
+    if(delta > 540){
+        this.x = -90;
+
+        var speedMultiplier = Math.random() * (3 - 1) + 1;
+        var incOrDec = Math.floor(Math.random() * (4 - 1) + 1);
+        var newSpeed = 0;
+
+        if(incOrDec >= 2){
+            newSpeed = this.speed * speedMultiplier;
+        }
+        else{
+            newSpeed = this.speed / speedMultiplier;
+        }
+
+        if(newSpeed > 250){
+            newSpeed = 250;
+        }
+        else if(newSpeed < 100){
+            newSpeed = 100;
+        }
+
+        this.speed = newSpeed;
+    }
+    else{
+        this.x = delta;
+    }
+
+
 };
 
 // Draw the enemy on the screen, required method for game
@@ -42,12 +75,17 @@ Player.prototype.render = function() {
 
 // Process player input
 Player.prototype.handleInput = function(key){
+
+    // Variables later used to determine if
+    // position to move to is valid
     var originalX = this.x;
     var originalY = this.y;
     var newX = 0;
     var newY = 0;
 
-    if (key == 'left'){
+   // 101 and 83 were determined to be the
+   // row and column sizes
+   if (key == 'left'){
         newX = this.x - 101;
         newY = originalY;
     }
@@ -72,6 +110,8 @@ Player.prototype.handleInput = function(key){
         this.x = newX;
     }
 
+    // If the player cross the blue water,
+    // reset and increase the score
     if (newY < 0){
         this.scored();
     }
@@ -83,9 +123,11 @@ Player.prototype.handleInput = function(key){
     }
 }
 
+// A white rectangle is drawn prior to updating the score
+// in order to prevent text overlap.
 Player.prototype.updateScore = function(score){
     ctx.fillStyle = "white";
-    ctx.fillRect(0, 0,150,100);
+    ctx.fillRect(0, 0,200,200);
     ctx.font = "30px Arial";
     ctx.fillStyle = "blue";
     ctx.fillText("Score: " + score,10,50);
@@ -109,9 +151,9 @@ Player.prototype.reset = function(){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var grunt1 = new Enemy(1,65,50);
-var grunt2 = new Enemy(1,145,4);
-var grunt3 = new Enemy(1,230,10);
+var grunt1 = new Enemy(1,65,70);
+var grunt2 = new Enemy(1,145,120);
+var grunt3 = new Enemy(1,230,180);
 var allEnemies = [];
 
 allEnemies[0] = grunt1;
