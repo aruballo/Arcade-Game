@@ -78,6 +78,10 @@ var Player = function(x, y, speed){
     this.sprite = 'images/char-horn-girl.png';
     this.speed = speed;
     this.score = 0;
+    this.crossed = new SoundPool(10);
+    this.crossed.init("crossed");
+    this.hit = new SoundPool(20);
+    this.hit.init("hit");
 }
 
 Player.prototype.render = function() {
@@ -164,6 +168,7 @@ Player.prototype.updateScore = function(score){
 
 // Increase score
 Player.prototype.scored = function(){
+    this.crossed.get();
     this.score = this.score + 10;
     this.updateScore(this.score);
     this.reset();
@@ -171,6 +176,7 @@ Player.prototype.scored = function(){
 
 // Decrease score
 Player.prototype.damaged = function(){
+    this.hit.get();
     this.score = this.score - 10;
     this.updateScore(this.score);
     this.reset();

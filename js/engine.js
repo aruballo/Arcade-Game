@@ -64,6 +64,11 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
+        this.backgroundAudio = new Audio("sounds/Background-Music.mp3");
+        this.backgroundAudio.loop = true;
+        this.backgroundAudio.volume = .05;
+        this.backgroundAudio.load();
+        this.backgroundAudio.play();
         reset();
         lastTime = Date.now();
         main();
