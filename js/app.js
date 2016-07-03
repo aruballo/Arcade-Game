@@ -21,10 +21,20 @@ Enemy.prototype.update = function(dt) {
     // Calculate initial movement
     var delta = this.x + this.speed * dt;
 
+    // Boundaries for player hit detection
+    var lowX = player.x - 30;
+    var highX = player.x + 30;
+    var lowY = player.y - 15;
+    var highY = player.y + 15;
+
+    // Player hit trigger
+    if(lowX <= delta && highX >= delta && lowY <= this.y && highY >= this.y){
+        player.damaged();
+    }
+
     // If this enemy goes offscreen, reset his position
     // and give him a new speed. Otherwise continue forward
     if(delta > 540){
-        this.x = -90;
 
         var speedMultiplier = Math.random() * (3 - 1) + 1;
         var incOrDec = Math.floor(Math.random() * (4 - 1) + 1);
@@ -45,6 +55,7 @@ Enemy.prototype.update = function(dt) {
         }
 
         this.speed = newSpeed;
+        this.x = -90;
     }
     else{
         this.x = delta;
@@ -103,6 +114,8 @@ Player.prototype.handleInput = function(key){
         newX = originalX;
     }
 
+    // If the next x movement is outside
+    // the boundaries, do nothing
     if (newX < 0 || newX > 498){
         this.x = originalX;
     }
@@ -110,7 +123,22 @@ Player.prototype.handleInput = function(key){
         this.x = newX;
     }
 
-    // If the player cross the blue water,
+    // Check if the next move collides
+    // with an enemy
+    for(var i = 0; i < allEnemies.length; i++){
+        var lowX = newX - 15;
+        var highX = newX + 15;
+
+        var lowY = newY - 15;
+        var highY = newY + 15;
+        if((lowX <= allEnemies[i].x  && highX >= allEnemies[i].x)
+            && (lowY <= allEnemies[i].y && highY >= allEnemies[i].y)){
+            this.damaged();
+            return;
+        }
+    }
+
+    // If the player crossed the blue water,
     // reset and increase the score
     if (newY < 0){
         this.scored();
@@ -121,6 +149,7 @@ Player.prototype.handleInput = function(key){
     else{
         this.y = newY;
     }
+
 }
 
 // A white rectangle is drawn prior to updating the score
@@ -133,15 +162,25 @@ Player.prototype.updateScore = function(score){
     ctx.fillText("Score: " + score,10,50);
 }
 
+// Increase score
 Player.prototype.scored = function(){
     this.score = this.score + 10;
     this.updateScore(this.score);
     this.reset();
 }
 
+// Decrease score
+Player.prototype.damaged = function(){
+    this.score = this.score - 10;
+    this.updateScore(this.score);
+    this.reset();
+}
+
+// Not sure what the purpose of this is.
 Player.prototype.update = function(){
 }
 
+// Set player back to original starting position
 Player.prototype.reset = function(){
     this.x = 205;
     this.y = 375;
@@ -151,9 +190,9 @@ Player.prototype.reset = function(){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var grunt1 = new Enemy(1,65,70);
-var grunt2 = new Enemy(1,145,120);
-var grunt3 = new Enemy(1,230,180);
+var grunt1 = new Enemy(1,43,70);
+var grunt2 = new Enemy(1,126,120);
+var grunt3 = new Enemy(1,209,180);
 var allEnemies = [];
 
 allEnemies[0] = grunt1;
