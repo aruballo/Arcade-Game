@@ -24,6 +24,13 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
+    var playerImages = [
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
+    ];
 
     canvas.width = 505;
     canvas.height = 606;
@@ -46,7 +53,8 @@ var Engine = (function(global) {
          * our update function since it may be used for smooth animation.
          */
         update(dt);
-        render();
+        renderBackground();
+        renderEntities();
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -59,11 +67,57 @@ var Engine = (function(global) {
         win.requestAnimationFrame(main);
     }
 
+    function initMainMenu() {
+
+        renderBackground();
+        ctx.drawImage(Resources.get('images/Title.png'), 0, 80, 500, 420);
+
+        ctx.fillStyle = "red";
+        ctx.font = "bold 32px Serif";
+        ctx.fillText("Click a character to start!", 80,430);
+
+        for(var col = 0; col < 5; col++){
+            ctx.drawImage(Resources.get(playerImages[col]), col * 101, 5* 83);
+        }
+
+        // Add event listener for `click` events.
+        canvas.addEventListener('click', characterClick, false);
+    }
+
+    function characterClick(event) {
+        var x = event.pageX - 707,
+            y = event.pageY - 10;
+
+        if(x >= 0 && x < 101 && y > 460){
+            player.sprite = playerImages[0];
+        }
+        else if(x >= 101 && x < 202 && y > 460){
+            player.sprite = playerImages[1];
+        }
+
+        else if(x >= 202 && x < 303 && y > 460){
+            player.sprite = playerImages[2];
+        }
+
+        else if(x >= 303 && x < 404 && y > 460){
+            player.sprite = playerImages[3];
+        }
+
+        else if(x >= 404 && x <= 505 && y > 460){
+            player.sprite = playerImages[4];
+        }
+
+        if(x > 0 && y > 460){
+            initGame();
+        }
+
+    }
+
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
-    function init() {
+    function initGame() {
         this.backgroundAudio = new Audio("sounds/Background-Music.mp3");
         this.backgroundAudio.loop = true;
         this.backgroundAudio.volume = .05;
@@ -85,7 +139,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -108,7 +161,7 @@ var Engine = (function(global) {
      * they are flipbooks creating the illusion of animation but in reality
      * they are just drawing the entire screen over and over.
      */
-    function render() {
+    function renderBackground() {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
@@ -141,7 +194,6 @@ var Engine = (function(global) {
             }
         }
 
-        renderEntities();
     }
 
     /* This function is called by the render function and is called on each game
@@ -176,9 +228,14 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/Title.png'
     ]);
-    Resources.onReady(init);
+    Resources.onReady(initMainMenu);
 
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developers can use it more easily
