@@ -504,7 +504,6 @@ var Engine = (function(global) {
         ctx.drawImage(Resources.get(allImages[life + 9]), 400, 0);
     }
 
-    // Not sure what the purpose of this is.
     Player.prototype.update = function(){
     }
 
